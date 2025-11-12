@@ -69,20 +69,35 @@ export default function SearchPage() {
     fetchAnime(searchQuery, currentPage, selectedGenres);
   };
 
+  const featuredAnime = searchResults[0];
+
   return (
     <div className="search-page">
-      <header className="search-header">
-        <h1 className="search-title">Anime Search</h1>
-        <p className="search-subtitle">
-          {searchQuery ? `Search results for "${searchQuery}"` : 'Discover top anime'}
-        </p>
-      </header>
+      {/* Netflix-style Hero Banner */}
+      {!searchQuery && featuredAnime && !isLoading && (
+        <div className="hero-banner" style={{ backgroundImage: `url(${featuredAnime.images.jpg.large_image_url})` }}>
+          <div className="hero-overlay">
+            <div className="hero-content">
+              <h1 className="hero-title">{featuredAnime.title}</h1>
+              <div className="hero-meta">
+                <span className="hero-rating">⭐ {featuredAnime.score}</span>
+                <span className="hero-year">{featuredAnime.year || 'N/A'}</span>
+                <span className="hero-type">{featuredAnime.type}</span>
+              </div>
+              <p className="hero-synopsis">{featuredAnime.synopsis?.slice(0, 200)}...</p>
+              <div className="hero-buttons">
+                <button className="hero-button hero-button-play">▶ Watch Now</button>
+                <button className="hero-button hero-button-info">ℹ More Info</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="search-controls">
         <SearchBar onSearch={handleSearch} initialValue={searchQuery} />
         <GenreFilter selectedGenres={selectedGenres} onGenreChange={handleGenreChange} />
       </div>
-
 
       <main className="search-content">
         {error ? (
