@@ -193,16 +193,18 @@ body::before {
   color: white;
 }
 
-/* Netflix-style Hero Banner */
-.hero-banner {
+/* Netflix-style Full-Width Hero Banner */
+.hero-banner-full {
   position: relative;
-  width: 100%;
-  height: 80vh;
+  width: 100vw;
+  height: 120vh;
+  min-height: 900px;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  margin-bottom: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  margin-bottom: 40px;
-  border-radius: var(--radius);
   overflow: hidden;
 }
 
@@ -220,13 +222,16 @@ body::before {
     transparent 100%
   );
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 60px 0 0 0;
 }
 
 .hero-content {
   max-width: 600px;
-  padding: 60px;
+  padding: 0 60px;
   color: white;
+  flex-shrink: 0;
 }
 
 .hero-title {
@@ -1279,5 +1284,153 @@ body::before {
 @media (max-width: 480px) {
   .genre-list {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Netflix-style Carousel Section Inside Banner */
+.carousel-section-inside {
+  width: 100%;
+  padding: 20px 0 40px 0;
+  margin-top: auto;
+}
+
+.carousel-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 24px;
+  padding: 0 60px;
+  letter-spacing: -0.02em;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.carousel-container {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 60px 20px 60px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for carousel */
+.carousel-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carousel-container::-webkit-scrollbar-track {
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 4px;
+  margin: 0 60px;
+}
+
+.carousel-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.5), rgba(217, 70, 239, 0.5));
+  border-radius: 4px;
+}
+
+.carousel-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.7), rgba(217, 70, 239, 0.7));
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+}
+
+.carousel-card {
+  width: 280px;
+  flex-shrink: 0;
+  transition: transform var(--transition);
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.carousel-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-card:hover .carousel-card-image img {
+  transform: scale(1.1);
+}
+
+.carousel-card-image {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.carousel-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition);
+}
+
+.top-rank-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, #e50914, #b20710);
+  color: #ffffff;
+  padding: 6px 12px;
+  font-weight: 900;
+  font-size: 1.8rem;
+  z-index: 2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  min-width: 50px;
+  text-align: center;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments for carousel */
+@media (max-width: 768px) {
+  .carousel-title {
+    font-size: 1.4rem;
+    padding: 0 30px;
+  }
+
+  .carousel-container {
+    padding: 0 30px 20px 30px;
+  }
+
+  .carousel-container::-webkit-scrollbar-track {
+    margin: 0 30px;
+  }
+
+  .carousel-card {
+    width: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-title {
+    font-size: 1.2rem;
+    padding: 0 20px;
+  }
+
+  .carousel-container {
+    padding: 0 20px 20px 20px;
+  }
+
+  .carousel-container::-webkit-scrollbar-track {
+    margin: 0 20px;
+  }
+
+  .carousel-card {
+    width: 180px;
   }
 }
