@@ -25,6 +25,7 @@ export default function SearchPage() {
   const fetchAnime = useCallback(async (query: string, page: number, genres: number[]) => {
     try {
       dispatch(setLoading(true));
+      console.log('Fetching anime with genres:', genres);
 
       let response;
       if (query.trim() === '') {
@@ -78,8 +79,8 @@ export default function SearchPage() {
   const featuredAnime = searchResults[0];
 
   // Filter out top 10 anime from the main grid when showing the hero banner
-  // Only slice on the first page when there's no search query
-  const displayedAnime = !searchQuery && searchResults.length > 0 && currentPage === 1
+  // Only slice on the first page when there's no search query AND no genre filter
+  const displayedAnime = !searchQuery && !selectedGenres.length && searchResults.length > 0 && currentPage === 1
     ? searchResults.slice(10)
     : searchResults;
 

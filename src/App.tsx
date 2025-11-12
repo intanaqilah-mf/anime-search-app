@@ -12,12 +12,32 @@ function AppContent() {
   const { searchQuery, selectedGenres } = useAppSelector((state) => state.anime);
 
   const handleGenreClick = (genreId: number) => {
-    // Toggle genre selection
-    if (selectedGenres.includes(genreId)) {
-      dispatch(setSelectedGenres(selectedGenres.filter(id => id !== genreId)));
+    // If same genre is clicked, clear it. Otherwise, set new genre
+    if (selectedGenres.length === 1 && selectedGenres[0] === genreId) {
+      dispatch(setSelectedGenres([]));
     } else {
       dispatch(setSelectedGenres([genreId]));
     }
+
+    // Scroll to anime grid after data loads - use multiple attempts
+    const scrollToGrid = () => {
+      const animeGrid = document.querySelector('.anime-grid');
+      if (animeGrid) {
+        const headerHeight = 80;
+        const elementPosition = animeGrid.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Try scrolling at different intervals to ensure it works
+    setTimeout(scrollToGrid, 300);
+    setTimeout(scrollToGrid, 600);
+    setTimeout(scrollToGrid, 1000);
   };
 
   const handleSearch = (query: string) => {
@@ -34,6 +54,7 @@ function AppContent() {
           onGenreClick={handleGenreClick}
           onSearch={handleSearch}
           searchValue={searchQuery}
+          selectedGenres={selectedGenres}
         />
       )}
       <Routes>

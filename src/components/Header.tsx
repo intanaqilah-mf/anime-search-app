@@ -4,6 +4,7 @@ interface HeaderProps {
   onGenreClick: (genreId: number) => void;
   onSearch: (query: string) => void;
   searchValue: string;
+  selectedGenres?: number[];
 }
 
 // Top 5 most popular anime genres
@@ -15,7 +16,7 @@ const TOP_GENRES = [
   { id: 22, name: 'Romance' },
 ];
 
-export default function Header({ onGenreClick, onSearch, searchValue }: HeaderProps) {
+export default function Header({ onGenreClick, onSearch, searchValue, selectedGenres = [] }: Readonly<HeaderProps>) {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearch(e.target.value);
   };
@@ -35,15 +36,18 @@ export default function Header({ onGenreClick, onSearch, searchValue }: HeaderPr
 
         {/* Middle: Top 5 Genres */}
         <nav className="header-nav">
-          {TOP_GENRES.map((genre) => (
-            <button
-              key={genre.id}
-              className="nav-genre-btn"
-              onClick={() => onGenreClick(genre.id)}
-            >
-              {genre.name}
-            </button>
-          ))}
+          {TOP_GENRES.map((genre) => {
+            const isSelected = selectedGenres.includes(genre.id);
+            return (
+              <button
+                key={genre.id}
+                className={`nav-genre-btn ${isSelected ? 'active' : ''}`}
+                onClick={() => onGenreClick(genre.id)}
+              >
+                {genre.name}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Right: Search Bar */}

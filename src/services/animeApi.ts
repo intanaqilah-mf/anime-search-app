@@ -70,6 +70,10 @@ export const getAnimeById = async (id: number): Promise<AnimeDetailResponse> => 
 
 export const getTopAnime = async (page: number = 1, genres: number[] = []): Promise<AnimeSearchResponse> => {
   try {
+    // If genres are specified, use the anime endpoint with sfw and order_by parameters
+    // Otherwise use top/anime endpoint
+    const endpoint = genres.length > 0 ? 'anime' : 'top/anime';
+
     const params = new URLSearchParams({
       page: page.toString(),
       limit: '25',
@@ -77,11 +81,12 @@ export const getTopAnime = async (page: number = 1, genres: number[] = []): Prom
 
     // Add genre filters if any
     if (genres.length > 0) {
-      params.append('filter', 'bypopularity');
       params.append('genres', genres.join(','));
+      params.append('order_by', 'popularity');
+      params.append('sfw', 'true');
     }
 
-    const response = await fetch(`${BASE_URL}/top/anime?${params}`);
+    const response = await fetch(`${BASE_URL}/${endpoint}?${params}`);
 
     if (!response.ok) {
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
