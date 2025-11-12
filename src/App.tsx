@@ -66,7 +66,7 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/animeflix">
       <AppContent />
     </BrowserRouter>
   );
