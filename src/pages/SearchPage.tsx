@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   setSearchQuery,
+  setSelectedGenres,
   setCurrentPage,
   setSearchResults,
   setLoading,
@@ -9,6 +10,7 @@ import {
 } from '../store/animeSlice';
 import { searchAnime, getTopAnime, cancelSearch } from '../services/animeApi';
 import SearchBar from '../components/SearchBar';
+import GenreFilter from '../components/GenreFilter';
 import AnimeCard from '../components/AnimeCard';
 import Pagination from '../components/Pagination';
 import ErrorMessage from '../components/ErrorMessage';
@@ -16,20 +18,20 @@ import SkeletonCard from '../components/SkeletonCard';
 
 export default function SearchPage() {
   const dispatch = useAppDispatch();
-  const { searchResults, searchQuery, currentPage, pagination, isLoading, error } =
+  const { searchResults, searchQuery, selectedGenres, currentPage, pagination, isLoading, error } =
     useAppSelector((state) => state.anime);
 
-  const fetchAnime = async (query: string, page: number) => {
+  const fetchAnime = async (query: string, page: number, genres: number[]) => {
     try {
       dispatch(setLoading(true));
 
       let response;
       if (query.trim() === '') {
         // If no search query, show top anime
-        response = await getTopAnime(page);
+        response = await getTopAnime(page, genres);
       } else {
         // Otherwise, search for anime
-        response = await searchAnime(query, page);
+        response = await searchAnime(query, page, genres);
       }
 
       dispatch(setSearchResults({ data: response.data, pagination: response.pagination }));
@@ -41,18 +43,22 @@ export default function SearchPage() {
     }
   };
 
-  // Fetch anime when search query or page changes
+  // Fetch anime when search query, page, or genres change
   useEffect(() => {
-    fetchAnime(searchQuery, currentPage);
+    fetchAnime(searchQuery, currentPage, selectedGenres);
 
     // Cleanup: cancel any pending requests when component unmounts
     return () => {
       cancelSearch();
     };
-  }, [searchQuery, currentPage]);
+  }, [searchQuery, currentPage, selectedGenres]);
 
   const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
+  };
+
+  const handleGenreChange = (genres: number[]) => {
+    dispatch(setSelectedGenres(genres));
   };
 
   const handlePageChange = (page: number) => {
@@ -60,7 +66,7 @@ export default function SearchPage() {
   };
 
   const handleRetry = () => {
-    fetchAnime(searchQuery, currentPage);
+    fetchAnime(searchQuery, currentPage, selectedGenres);
   };
 
   return (
@@ -70,8 +76,13 @@ export default function SearchPage() {
         <p className="search-subtitle">
           {searchQuery ? `Search results for "${searchQuery}"` : 'Discover top anime'}
         </p>
-        <SearchBar onSearch={handleSearch} initialValue={searchQuery} />
       </header>
+
+      <div className="search-controls">
+        <SearchBar onSearch={handleSearch} initialValue={searchQuery} />
+        <GenreFilter selectedGenres={selectedGenres} onGenreChange={handleGenreChange} />
+      </div>
+
 
       <main className="search-content">
         {error ? (

@@ -6,7 +6,8 @@ let abortController: AbortController | null = null;
 
 export const searchAnime = async (
   query: string,
-  page: number = 1
+  page: number = 1,
+  genres: number[] = []
 ): Promise<AnimeSearchResponse> => {
   // Cancel any in-flight request
   if (abortController) {
@@ -22,6 +23,11 @@ export const searchAnime = async (
       page: page.toString(),
       limit: '25',
     });
+
+    // Add genre filters if any
+    if (genres.length > 0) {
+      params.append('genres', genres.join(','));
+    }
 
     const response = await fetch(`${BASE_URL}/anime?${params}`, {
       signal: abortController.signal,
@@ -62,12 +68,18 @@ export const getAnimeById = async (id: number): Promise<AnimeDetailResponse> => 
   }
 };
 
-export const getTopAnime = async (page: number = 1): Promise<AnimeSearchResponse> => {
+export const getTopAnime = async (page: number = 1, genres: number[] = []): Promise<AnimeSearchResponse> => {
   try {
     const params = new URLSearchParams({
       page: page.toString(),
       limit: '25',
     });
+
+    // Add genre filters if any
+    if (genres.length > 0) {
+      params.append('filter', 'bypopularity');
+      params.append('genres', genres.join(','));
+    }
 
     const response = await fetch(`${BASE_URL}/top/anime?${params}`);
 

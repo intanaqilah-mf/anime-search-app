@@ -4,6 +4,7 @@ import type { Anime, AnimePagination } from '../types/anime';
 interface AnimeState {
   searchResults: Anime[];
   searchQuery: string;
+  selectedGenres: number[];
   currentPage: number;
   pagination: AnimePagination | null;
   isLoading: boolean;
@@ -14,6 +15,7 @@ interface AnimeState {
 const initialState: AnimeState = {
   searchResults: [],
   searchQuery: '',
+  selectedGenres: [],
   currentPage: 1,
   pagination: null,
   isLoading: false,
@@ -28,6 +30,10 @@ const animeSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
       state.currentPage = 1; // Reset to page 1 when search query changes
+    },
+    setSelectedGenres: (state, action: PayloadAction<number[]>) => {
+      state.selectedGenres = action.payload;
+      state.currentPage = 1; // Reset to page 1 when genres change
     },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
@@ -56,6 +62,7 @@ const animeSlice = createSlice({
 
 export const {
   setSearchQuery,
+  setSelectedGenres,
   setCurrentPage,
   setSearchResults,
   setLoading,
