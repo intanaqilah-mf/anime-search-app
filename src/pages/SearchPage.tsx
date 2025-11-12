@@ -2,16 +2,12 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-  setSearchQuery,
-  setSelectedGenres,
   setCurrentPage,
   setSearchResults,
   setLoading,
   setError,
 } from '../store/animeSlice';
 import { searchAnime, getTopAnime, cancelSearch } from '../services/animeApi';
-import SearchBar from '../components/SearchBar';
-import GenreFilter from '../components/GenreFilter';
 import AnimeCard from '../components/AnimeCard';
 import Pagination from '../components/Pagination';
 import ErrorMessage from '../components/ErrorMessage';
@@ -58,14 +54,6 @@ export default function SearchPage() {
       cancelSearch();
     };
   }, [searchQuery, currentPage, selectedGenres, fetchAnime]);
-
-  const handleSearch = useCallback((query: string) => {
-    dispatch(setSearchQuery(query));
-  }, [dispatch]);
-
-  const handleGenreChange = useCallback((genres: number[]) => {
-    dispatch(setSelectedGenres(genres));
-  }, [dispatch]);
 
   const handlePageChange = useCallback((page: number) => {
     console.log('handlePageChange called with page:', page);
@@ -222,11 +210,6 @@ export default function SearchPage() {
       )}
 
       <div className="search-page">
-        <div className="search-controls">
-          <SearchBar onSearch={handleSearch} initialValue={searchQuery} />
-          <GenreFilter selectedGenres={selectedGenres} onGenreChange={handleGenreChange} />
-        </div>
-
         <main className="search-content">
           {error ? (
             <ErrorMessage message={error} onRetry={handleRetry} />
