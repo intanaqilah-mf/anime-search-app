@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { setSearchQuery, setSelectedGenres } from './store/animeSlice';
 import Header from './components/Header';
@@ -8,7 +8,6 @@ import './App.css';
 
 function AppContent() {
   const dispatch = useAppDispatch();
-  const location = useLocation();
   const { searchQuery, selectedGenres } = useAppSelector((state) => state.anime);
 
   const handleGenreClick = (genreId: number) => {
@@ -44,19 +43,14 @@ function AppContent() {
     dispatch(setSearchQuery(query));
   };
 
-  // Only show header on search page
-  const showHeader = location.pathname === '/';
-
   return (
     <div className="app">
-      {showHeader && (
-        <Header
-          onGenreClick={handleGenreClick}
-          onSearch={handleSearch}
-          searchValue={searchQuery}
-          selectedGenres={selectedGenres}
-        />
-      )}
+      <Header
+        onGenreClick={handleGenreClick}
+        onSearch={handleSearch}
+        searchValue={searchQuery}
+        selectedGenres={selectedGenres}
+      />
       <Routes>
         <Route path="/" element={<SearchPage />} />
         <Route path="/anime/:id" element={<DetailPage />} />
